@@ -21,6 +21,8 @@ public class MainMenu implements Screen {
     private OrthographicCamera camera;
     private HashMap<String, Texture> textures;
 
+    private boolean wasTouching;
+
     public MainMenu(final ImperialistCollector game) {
         this.game = game;
 
@@ -28,6 +30,7 @@ public class MainMenu implements Screen {
         camera.setToOrtho(false, Default.screen.width, Default.screen.height);
 
         textures = new HashMap<String, Texture>();
+        wasTouching = Gdx.input.isTouched();
     }
 
     @Override
@@ -50,16 +53,11 @@ public class MainMenu implements Screen {
     }
 
     public void input() {
-        /**
-         * TODO: fix cross-screen touch bug:
-         * When touching from the lost screen the MainMenu screen
-         * goes by way too fast, since the touch pressed to get out
-         * from the Gameplay screen is registered right after
-         * entering the MainMenu screen.
-         * To fix this you should detect what is a long and short
-         * press or something idk.
-         */
-        if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if (wasTouching) {
+            wasTouching = Gdx.input.isTouched();
+        }
+
+        if ((!wasTouching && Gdx.input.isTouched()) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             game.setScreen(new Gameplay(game));
             dispose();
         }

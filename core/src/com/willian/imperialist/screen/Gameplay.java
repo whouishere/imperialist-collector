@@ -29,6 +29,7 @@ public class Gameplay implements Screen {
     private int lives = 3;
     private int points = 0;
     private boolean lost = false;
+    private boolean wasTouching;
 
     public Gameplay(final ImperialistCollector game) {
         this.game = game;
@@ -67,13 +68,18 @@ public class Gameplay implements Screen {
 
             // TODO: implement a high-score system
             if (lost) {
+                // if before loss it was touching, see if it is still touching so it can wait for the player to stop touching
+                if (wasTouching) {
+                    wasTouching = Gdx.input.isTouched();
+                }
+
                 game.batch.draw(textures.get("dim"), 0, 0);
 
                 game.font.setColor(Color.RED);
                 game.font.getData().setScale(1);
                 game.font.draw(game.batch, game.lang.get("lost"), 0, Default.screen.height / 2 + game.font.getXHeight() / 2, Default.screen.width, Align.center, true);
 
-                if (Gdx.input.isTouched() || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                if ((!wasTouching && Gdx.input.isTouched()) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
                     game.setScreen(new MainMenu(game));
                     dispose();
                 }
@@ -108,6 +114,8 @@ public class Gameplay implements Screen {
 		if (lives < 1) {
 			lost = true;
 		}
+
+        wasTouching = Gdx.input.isTouched();
     }
 
     public void input(float delta) {
@@ -119,10 +127,11 @@ public class Gameplay implements Screen {
         }
 
         final boolean isOnTurbo = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+        final float velocity = (isOnTurbo ? (bucket.velocity * 2) : bucket.velocity) * delta;
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && bucket.rect.x >= 0) 
-			bucket.rect.x -= (isOnTurbo ? (bucket.velocity * 2) : bucket.velocity) * delta;
+			bucket.rect.x -= velocity;
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && bucket.rect.x + bucket.width <= Default.screen.width) 
-			bucket.rect.x += (isOnTurbo ? (bucket.velocity * 2) : bucket.velocity) * delta;
+			bucket.rect.x += velocity;
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.L))
 			lost = true;
