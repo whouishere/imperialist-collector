@@ -35,7 +35,8 @@ public class Drop {
     public void addDrop() {
         if (drops < 0 ) {
             drops = 0;
-        } else if (drops > rect.size()) {
+        }
+        else if (drops > rect.size()) {
             drops = rect.size();
         }
 
@@ -56,9 +57,7 @@ public class Drop {
 
     // only call this method when a draw batch has begun, obviously
     public void draw(SpriteBatch batch) {
-        if (batch.isDrawing()) {
-            rect.forEach(iRect -> batch.draw(getTexture(), iRect.x, iRect.y));
-        }
+        rect.forEach(iRect -> batch.draw(getTexture(), iRect.x, iRect.y));
     }
     
     public void dispose() {

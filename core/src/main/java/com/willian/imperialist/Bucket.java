@@ -43,7 +43,8 @@ public class Bucket {
         // makes sure the array does not go OutOfBounds
         if (animFrame < 0) {
             animFrame = 0;
-        } else if (animFrame > frames - 1) {
+        }
+        else if (animFrame > frames - 1) {
             animFrame = frames - 1;
         }
 
@@ -52,9 +53,7 @@ public class Bucket {
 
     // only call this method when a draw batch has begun, obviously
     public void draw(SpriteBatch batch) {
-        if (batch.isDrawing()) {
-            batch.draw(getTextureFrame(), rect.x, rect.y);
-        }
+        batch.draw(getTextureFrame(), rect.x, rect.y);
     }
 
     public void dispose() {

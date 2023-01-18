@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -68,7 +69,8 @@ public class Gameplay implements Screen {
 
             // TODO: implement a high-score system
             if (lost) {
-                // if before loss it was touching, see if it is still touching so it can wait for the player to stop touching
+                // check if before having lost the player was still touching
+                // so it can wait for the player to stop touching
                 if (wasTouching) {
                     wasTouching = Gdx.input.isTouched();
                 }
@@ -77,9 +79,15 @@ public class Gameplay implements Screen {
 
                 game.font.setColor(Color.RED);
                 game.font.getData().setScale(1);
-                game.font.draw(game.batch, game.lang.get("lost"), 0, Default.screen.height / 2 + game.font.getXHeight() / 2, Default.screen.width, Align.center, true);
+                game.font.draw(game.batch, 
+                               game.lang.get("lost"), 
+                               0, Default.screen.height / 2 + game.font.getXHeight() / 2, 
+                               Default.screen.width, Align.center, true);
 
-                if ((!wasTouching && Gdx.input.isTouched()) || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                if ((!wasTouching && Gdx.input.isTouched()) 
+                    || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) 
+                    || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+                
                     game.setScreen(new MainMenu(game));
                     dispose();
                 }
@@ -93,21 +101,28 @@ public class Gameplay implements Screen {
     }
 
     public void update(float delta) {
-        for (int rectIter = 0; rectIter < drop.rect.size(); rectIter++) {
-            if (drop.rect.get(rectIter).y > 0) {
+        for(int i = 0; i < drop.rect.size(); i++) {
+            final Rectangle rect = drop.rect.get(i);
+
+            if (rect.y > 0) {
+
                 // if drop reaches the bucket
-                if (drop.rect.get(rectIter).overlaps(bucket.rect)) {
-					points++;
-					if (points % 5 == 0) {
-						bucket.nextFrame();
-					}
-                    drop.resetDrop(drop.rect.get(rectIter));
+                if (rect.overlaps(bucket.rect)) {
+                    points++;
+
+                    // change filled bucket for each 5 points
+                    if (points % 5 == 0) {
+                        bucket.nextFrame();
+                    }
+                    
+                    drop.resetDrop(rect);
                     drop.addDrop();
                 }
-                drop.rect.get(rectIter).y -= drop.velocity * delta;
-            } else {
-				lives--;
-                drop.resetDrop(drop.rect.get(rectIter));
+
+                rect.y -= drop.velocity * delta;
+            } else { // if touched the ground
+                lives--;
+                drop.resetDrop(rect);
             }
         }
 
@@ -168,7 +183,6 @@ public class Gameplay implements Screen {
         bucket.dispose();
         drop.dispose();
 
-        // most efficient way up to 100 elements. see: https://stackoverflow.com/a/35558955/13959383
         textures.forEach((key, texture) -> texture.dispose());
     }
 }

@@ -42,11 +42,17 @@ public class MainMenu implements Screen {
         game.batch.begin();
             game.font.setColor(Color.BLACK);
             game.font.getData().setScale(1);
-            game.font.draw(game.batch, game.lang.get("menu_title"), 0, getFontCenterY() + 25 , Default.screen.width, Align.center, true);
+            game.font.draw(game.batch, 
+                           game.lang.get("menu_title"), 
+                           0, getFontCenterY() + 25 , 
+                           Default.screen.width, Align.center, true);
 
             game.font.setColor(Color.FOREST);
             game.font.getData().setScale(0.75f);
-            game.font.draw(game.batch, "$ " + game.lang.get("menu_play") + " $", 0, getFontCenterY() - 25, Default.screen.width, Align.center, true);
+            game.font.draw(game.batch, 
+                           "$ " + game.lang.get("menu_play") + " $", 
+                           0, getFontCenterY() - 25, 
+                           Default.screen.width, Align.center, true);
         game.batch.end();
 
         input();
@@ -57,7 +63,9 @@ public class MainMenu implements Screen {
             wasTouching = Gdx.input.isTouched();
         }
 
-        if ((!wasTouching && Gdx.input.isTouched()) || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        if ((!wasTouching && Gdx.input.isTouched()) 
+            || Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+        
             game.setScreen(new Gameplay(game));
             dispose();
         }
