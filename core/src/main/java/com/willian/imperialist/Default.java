@@ -10,6 +10,7 @@ public class Default {
         public final static float aspect_ratio = (float)width / (float)height;
     }
 
+    // TODO: use XML instead
     // this is a clusterfuck, but it *kinda* makes sense when I'm setting the language
     public final static Map<String, Map<String, String>> locale = Map.of(
         "en", Map.of(

@@ -12,7 +12,8 @@ public class Lwjgl3Launcher {
 		config.setWindowedMode(960, 540);
 		config.setForegroundFPS(60);
 		config.useVsync(true);
-		config.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+		// TODO: script to resize a favicon to every icon size and folder
+		config.setWindowIcon("favicon128.png", "favicon64.png", "favicon32.png", "favicon16.png");
 		new Lwjgl3Application(new ImperialistCollector(), config);
 	}
 }
