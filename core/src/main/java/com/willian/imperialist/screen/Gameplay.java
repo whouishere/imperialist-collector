@@ -29,6 +29,7 @@ public class Gameplay implements Screen {
 
     private int lives = 3;
     private int points = 0;
+    private int pointGoal = 2;
     private boolean lost = false;
     private boolean wasTouching;
 
@@ -101,22 +102,15 @@ public class Gameplay implements Screen {
     }
 
     public void update(float delta) {
+        // check drops collision
         for(int i = 0; i < drop.rect.size(); i++) {
             final Rectangle rect = drop.rect.get(i);
 
             if (rect.y > 0) {
-
                 // if drop reaches the bucket
                 if (rect.overlaps(bucket.rect)) {
-                    points++;
-
-                    // change filled bucket for each 5 points
-                    if (points % 5 == 0) {
-                        bucket.nextFrame();
-                    }
-                    
+                    addPoint();
                     drop.resetDrop(rect);
-                    drop.addDrop();
                 }
 
                 rect.y -= drop.velocity * delta;
@@ -150,6 +144,21 @@ public class Gameplay implements Screen {
 		
 		if (Gdx.input.isKeyPressed(Input.Keys.L))
 			lost = true;
+    }
+
+    private void addPoint() {
+        points++;
+
+        // advance bucket fill for each 5 points
+        if (points % 5 == 0) {
+            bucket.nextFrame();
+        }
+
+        // increasingly add more drop
+        if (points == pointGoal) {
+            drop.addDrop();
+            pointGoal = points * 2;
+        }
     }
 
     @Override
