@@ -135,6 +135,9 @@ www-test/
 nbactions.xml
 nb-configuration.xml
 
+## packr:
+/packr/
+
 ## OS-Specific:
 .DS_Store
 Thumbs.db

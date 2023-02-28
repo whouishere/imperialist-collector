@@ -4,6 +4,7 @@ PACKR_PATH="packr"
 PACKR_VERSION="4.0.0"
 PACKR_JAR="packr-all-${PACKR_VERSION}.jar"
 PACKR_JAR_PATH="${PACKR_PATH}/${PACKR_JAR}"
+OUTPUT_FOLDER="lwjgl3"
 PLATFORM="windows64"
 
 if [[ $1 == "linux" ]] || [[ $1 == "linux64" ]]; then
@@ -32,11 +33,11 @@ java -jar $PACKR_JAR_PATH \
   --jdk "${PACKR_PATH}/jre/jre_${PLATFORM}" \
   --useZgcIfSupportedOs \
   --executable imperialist-collector \
-  --classpath "desktop/build/libs/desktop-${VERSION}.jar" \
-  --mainclass com.willian.imperialist.DesktopLauncher \
+  --classpath "${OUTPUT_FOLDER}/build/lib/imperialist-collector-${VERSION}.jar" \
+  --mainclass com.willian.imperialist.lwjgl3.Lwjgl3Launcher \
   --vmargs Xmx1G \
   --vmargs Xms256m \
-  --output "desktop/build/target/release-${VERSION}-${PLATFORM}"
+  --output "${OUTPUT_FOLDER}/build/target/release-${VERSION}-${PLATFORM}"
 
 echo
-echo "Finished packing. If packr didn't spit any errors the final package must be at desktop/build/target."
+echo "Finished packing. If packr didn't spit any errors the final package must be at ${OUTPUT_FOLDER}/build/target."
