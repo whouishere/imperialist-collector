@@ -1,4 +1,4 @@
-package com.willian.imperialist;
+package com.willian.imperialist.android;
 
 import android.os.Bundle;
 
