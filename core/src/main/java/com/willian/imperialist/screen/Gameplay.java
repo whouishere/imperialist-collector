@@ -8,6 +8,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Align;
@@ -33,6 +36,9 @@ public class Gameplay implements Screen {
     private boolean lost = false;
     private boolean wasTouching;
 
+    private final FreeTypeFontParameter lostFontParameter;
+    private final FreeTypeFontParameter pointsFontParameter;
+
     public Gameplay(final ImperialistCollector game) {
         this.game = game;
 
@@ -47,6 +53,15 @@ public class Gameplay implements Screen {
 
         bucket = new Bucket();
         drop = new Drop();
+
+        // font styling
+        lostFontParameter = new FreeTypeFontParameter();
+        lostFontParameter.size = 15;
+        lostFontParameter.color = Color.RED;
+
+        pointsFontParameter = new FreeTypeFontParameter();
+        pointsFontParameter.size = 10;
+        pointsFontParameter.color = Color.FOREST;
     }
 
     @Override
@@ -64,9 +79,8 @@ public class Gameplay implements Screen {
 				game.batch.draw(textures.get("money"), Default.screen.width - 18 * i, Default.screen.height - 18);
 			}
 
-            game.font.setColor(Color.FOREST);
-            game.font.getData().setScale(0.5f);
-            game.font.draw(game.batch, Integer.toString(points), 2, Default.screen.height - 2);
+            final BitmapFont pointsFont = game.getFont(pointsFontParameter);
+            pointsFont.draw(game.batch, Integer.toString(points), 2, Default.screen.height - 2);
 
             // TODO: implement a high-score system
             if (lost) {
@@ -78,12 +92,11 @@ public class Gameplay implements Screen {
 
                 game.batch.draw(textures.get("dim"), 0, 0);
 
-                game.font.setColor(Color.RED);
-                game.font.getData().setScale(1);
-                game.font.draw(game.batch, 
-                               game.lang.get("lost"), 
-                               0, Default.screen.height / 2 + game.font.getXHeight() / 2, 
-                               Default.screen.width, Align.center, true);
+                final BitmapFont lostFont = game.getFont(lostFontParameter);
+                lostFont.draw(game.batch,
+                              game.lang.get("lost"),
+                              0, Default.screen.height / 2 + lostFont.getXHeight() / 2,
+                              Default.screen.width, Align.center, true);
 
                 if ((!wasTouching && Gdx.input.isTouched()) 
                     || Gdx.input.isKeyJustPressed(Input.Keys.SPACE) 

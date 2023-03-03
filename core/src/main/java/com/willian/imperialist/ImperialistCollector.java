@@ -3,9 +3,12 @@ package com.willian.imperialist;
 import java.util.Map;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.willian.imperialist.screen.MainMenu;
@@ -17,13 +20,18 @@ public class ImperialistCollector extends Game {
 	public Settings settings;
 	
 	public Map<String, String> lang;
+
+	private FreeTypeFontGenerator fontGenerator;
 	
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		font = new BitmapFont(); // TODO: create a custom pixel font
+		font = new BitmapFont();
 		settings = new Settings(); // TODO: check if it's possible to make pre-defined settings on device cache
 		lang = Default.locale.get(settings.getLocale());
+		
+		// FIXME: the font isn't smooth. 
+		fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("ClearSans-Bold.ttf"));
 
 		this.setScreen(new MainMenu(this));
 	}
@@ -37,6 +45,11 @@ public class ImperialistCollector extends Game {
 	public void dispose () {
 		font.dispose();
 		batch.dispose();
+		fontGenerator.dispose();
+	}
+
+	public BitmapFont getFont(FreeTypeFontParameter parameter) {
+		return fontGenerator.generateFont(parameter);
 	}
 
 	public void onResize(int width, int height) {
