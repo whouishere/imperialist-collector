@@ -36,8 +36,8 @@ public class Gameplay implements Screen {
     private boolean lost = false;
     private boolean wasTouching;
 
-    private final FreeTypeFontParameter lostFontParameter;
-    private final FreeTypeFontParameter pointsFontParameter;
+    private final BitmapFont lostFont;
+    private final BitmapFont pointsFont;
 
     public Gameplay(final ImperialistCollector game) {
         this.game = game;
@@ -55,13 +55,15 @@ public class Gameplay implements Screen {
         drop = new Drop();
 
         // font styling
-        lostFontParameter = new FreeTypeFontParameter();
+        final FreeTypeFontParameter lostFontParameter = new FreeTypeFontParameter();
         lostFontParameter.size = 15;
         lostFontParameter.color = Color.RED;
+        lostFont = game.getFont(lostFontParameter);
 
-        pointsFontParameter = new FreeTypeFontParameter();
+        final FreeTypeFontParameter pointsFontParameter = new FreeTypeFontParameter();
         pointsFontParameter.size = 10;
         pointsFontParameter.color = Color.FOREST;
+        pointsFont = game.getFont(pointsFontParameter);
     }
 
     @Override
@@ -79,7 +81,6 @@ public class Gameplay implements Screen {
 				game.batch.draw(textures.get("money"), Default.screen.width - 18 * i, Default.screen.height - 18);
 			}
 
-            final BitmapFont pointsFont = game.getFont(pointsFontParameter);
             pointsFont.draw(game.batch, Integer.toString(points), 2, Default.screen.height - 2);
 
             // TODO: implement a high-score system
@@ -92,7 +93,6 @@ public class Gameplay implements Screen {
 
                 game.batch.draw(textures.get("dim"), 0, 0);
 
-                final BitmapFont lostFont = game.getFont(lostFontParameter);
                 lostFont.draw(game.batch,
                               game.lang.get("lost"),
                               0, Default.screen.height / 2 + lostFont.getXHeight() / 2,
@@ -204,6 +204,8 @@ public class Gameplay implements Screen {
     public void dispose() {
         bucket.dispose();
         drop.dispose();
+        lostFont.dispose();
+        pointsFont.dispose();
 
         textures.forEach((key, texture) -> texture.dispose());
     }

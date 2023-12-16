@@ -25,8 +25,8 @@ public class MainMenu implements Screen {
 
     private boolean wasTouching;
 
-    final private FreeTypeFontParameter titleFontParameter;
-    final private FreeTypeFontParameter buttonFontParameter;
+    final private BitmapFont titleFont;
+    final private BitmapFont buttonFont;
 
     public MainMenu(final ImperialistCollector game) {
         this.game = game;
@@ -38,13 +38,15 @@ public class MainMenu implements Screen {
         wasTouching = Gdx.input.isTouched();
 
         // font styling
-        titleFontParameter = new FreeTypeFontParameter();
+        final FreeTypeFontParameter titleFontParameter = new FreeTypeFontParameter();
         titleFontParameter.size = 15;
         titleFontParameter.color = Color.BLACK;
+        titleFont = game.getFont(titleFontParameter);
 
-        buttonFontParameter = new FreeTypeFontParameter();
+        final FreeTypeFontParameter buttonFontParameter = new FreeTypeFontParameter();
         buttonFontParameter.size = 10;
         buttonFontParameter.color = Color.FOREST;
+        buttonFont = game.getFont(buttonFontParameter);
     }
 
     @Override
@@ -54,16 +56,14 @@ public class MainMenu implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-            final BitmapFont title = game.getFont(titleFontParameter);
-            title.draw(game.batch,
+            titleFont.draw(game.batch,
                        game.lang.get("menu_title"),
-                       0, getFontCenterY(title) + 25,
+                       0, getFontCenterY(titleFont) + 25,
                        Default.screen.width, Align.center, true);
 
-            final BitmapFont play = game.getFont(buttonFontParameter);
-            play.draw(game.batch,
+            buttonFont.draw(game.batch,
                       "$ " + game.lang.get("menu_play") + " $",
-                      0, getFontCenterY(play) - 25,
+                      0, getFontCenterY(buttonFont) - 25,
                       Default.screen.width, Align.center, true);
         game.batch.end();
 
@@ -111,6 +111,9 @@ public class MainMenu implements Screen {
     @SuppressWarnings("NewApi")
     @Override
     public void dispose() {
+        titleFont.dispose();
+        buttonFont.dispose();
+
         textures.forEach((key, texture) -> texture.dispose());
     }
 
